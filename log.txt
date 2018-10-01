@@ -1,0 +1,51 @@
+
+
+
+=======================================
+Thu Sep 27 12:30:09 2018
+
+
+=======================================
+Thu Sep 27 12:34:19 2018
+Choosen comparisson and position
+
+
+=======================================
+Thu Sep 27 12:43:50 2018
+
+Choosen comparisson and positioncorrect
+correct
+correct
+
+
+
+=======================================
+Thu Sep 27 12:48:27 2018
+
+Choosen comparisson and position
+RIGHT     correct
+LEFT     incorrect
+RIGHT     correct
+
+
+=======================================
+Thu Sep 27 12:50:13 2018
+
+Choosen position and result:
+LEFT     incorrect
+RIGHT     correct
+
+
+=======================================
+Thu Sep 27 14:32:12 2018
+
+Choosen position and result:
+
+
+=======================================
+Thu Sep 27 22:06:03 2018
+
+Choosen position and result:
+LEFT     incorrect
+RIGHT     correct
+RIGHT     correct
