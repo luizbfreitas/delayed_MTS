@@ -26,6 +26,7 @@ class Application(tk.Frame):
         self.all_trials =[]
 
         for row in self.input_file: #creates a list with all trials
+            # change here to randomize the trials
             self.trial = {
             'trial': row[0],
             'sample' : row[1],
@@ -105,7 +106,7 @@ class Application(tk.Frame):
         self.frame_comparissons3["width"] = 320
         self.frame_comparissons3.grid(column=3, row=2, padx=100)
         
-        self.set_stimuli()
+        self.trial_control()
         self.log_header()
         
     def log_header(self):
@@ -119,18 +120,27 @@ class Application(tk.Frame):
             file_object.write('\n\nChoosen position and result:')
     
     def trial_control(self): #control the cicles
-    
-        self.bsample.grid_forget() #hides the sample for next trial
-        self.bcompa1.grid_forget() #hides bcompa1 for next trial
-        self.bcompa2.grid_forget() #hides bcompa2 for next trial
-    
-        if self.count_down_trials > 0:
+        
+        # the first trial has to be different because it doesn't need to forget a previews trial images 
+        if self.count_down_trials == len(self.all_trials):
             self.count_down_trials = self.count_down_trials - 1
             self.current_trial = self.all_trials[self.trial_number] #preparation for the loop
             print (self.current_trial) #important to know what trial is this
             #print (trial_number)
             self.trial_number = self.trial_number + 1
+            self.set_stimuli()
+        
+        elif self.count_down_trials < len(self.all_trials) and self.count_down_trials > 0:
             
+            self.bsample.grid_forget() #hides the sample for next trial
+            self.bcompa1.grid_forget() #hides bcompa1 for next trial
+            self.bcompa2.grid_forget() #hides bcompa2 for next trial
+            
+            self.count_down_trials = self.count_down_trials - 1
+            self.current_trial = self.all_trials[self.trial_number] #preparation for the loop
+            print (self.current_trial) #important to know what trial is this
+            #print (trial_number)
+            self.trial_number = self.trial_number + 1
             self.after(5000, self.set_stimuli)
             
         else: root.destroy()
@@ -188,16 +198,6 @@ class Application(tk.Frame):
     def show_comparissons(self):
         self.bcompa1.grid(column=2, row=2)
         self.bcompa2.grid(column=3, row=2)
-        
-         
-        #self.log_header()
-        #self.create_widgets_experimenter()
-
-    #def cicle_ctrl(self):
-        #while self.cicle < 5:
-        
-    #def set_schedule():
-            
 
 root = tk.Tk()
 app = Application(master=root)
