@@ -3,11 +3,15 @@
 
 import tkinter as tk
 
+import tkinter.ttk as ttk
+
 import time
 
 import random
 
 import csv
+
+import os
 
 
 class Application(tk.Frame):
@@ -20,23 +24,7 @@ class Application(tk.Frame):
         self.cicle = 0 #variable that will control the stimuli of the cicle
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-        
-        #building a list of trials from a csv file
-        self.input_file = csv.reader(open("data.csv"), delimiter =';')
-        self.all_trials =[]
 
-        for row in self.input_file: #creates a list with all trials
-            # change here to randomize the trials
-            self.trial = {
-            'trial': row[0],
-            'sample' : row[1],
-            'comp1' : row[2],
-            'comp2' : row[3],
-            }
-            self.all_trials.append(self.trial)
-        self.count_down_trials = len(self.all_trials) #number of trials based on number of rows in csv file
-        self.trial_number = 0
-        self.current_trial = self.all_trials[self.trial_number] #preparation for the loop
         
         self.create_widgets()
 
@@ -44,10 +32,10 @@ class Application(tk.Frame):
         # creates set the widgets in the main window
         self.start = tk.Button(self, fg="green")
         self.start["text"] = "Start \nSession"
-        self.start["command"] = self.open_window
+        self.start["command"] = self.define_stimuli
         self.start["height"] = 4
         self.start["width"] = 8
-        self.start.grid(column=2, row=7, sticky='W')
+        self.start.grid(column=2, row=8, sticky='N')
 
         self.quit = tk.Button(self, text="QUIT", fg="red",
                               command=root.destroy)
@@ -77,10 +65,72 @@ class Application(tk.Frame):
         self.delay20 = tk.Radiobutton(self, value=20000, variable=self.var)
         self.delay20["text"] = "Delay 20s"
         self.delay20.grid(column=1, row=6, sticky='W')
-    
+        
+        self.pick_img = tk.Label(self, text='Choose a category:')
+        self.pick_img.grid(column=1, row=7, sticky=('W'))
+        
+        self.img_option = ttk.Combobox(self, state='readonly')
+        self.img_option["values"] = ['all']+['buildings']+['community helpers']+['foods']+['letters']+['numbers']+['sports']+['vehicles']
+        self.img_option.current(0) #defines position 0 as default
+        self.img_option.grid(column=1, row=8, sticky=('N'), padx=10)
+
+    def define_stimuli(self):
+        
+        #need to set this code to select the right folder
+        self.box_value = self.img_option.get()
+        print(self.box_value)
+        self.path = "c:/users/luizt/dropbox/hd/python_work/delayed_mts/" + self.box_value + "/"
+        
+        #randomizes the trials in data.csv
+        self.list1 = os.listdir(self.path)
+        print(self.list1)
+        
+        with open('data.csv','w', newline='')as self.csvfile:
+            self.csv_writer = csv.writer(self.csvfile, delimiter=";")
+            #csv_writer.writerow(["Trial", "Sample", "Comp1", "Comp2"])
+            self.countdown_items = 20
+            self.trial_num = 1
+            while self.countdown_items > 0:
+                self.sample_item = random.choice(self.list1)
+                self.dice = random.randint(0, 100)
+                if self.dice <= 50:
+                    self.comp1_item = self.sample_item
+                    self.comp2_item = random.choice(self.list1)
+                else:
+                    self.comp1_item = random.choice(self.list1)
+                    self.comp2_item = self.sample_item
+                if self.comp1_item != self.comp2_item:
+                    self.countdown_items = self.countdown_items - 1
+                    self.csv_writer.writerow([self.trial_num] + 
+                    [self.sample_item] + 
+                    [self.comp1_item] +
+                    [self.comp2_item])
+                    self.trial_num = self.trial_num + 1
+                else: continue
+        
+        #building a list of trials from a csv file
+        self.input_file = csv.reader(open("data.csv"), delimiter =';')
+        self.all_trials =[]
+        
+        for row in self.input_file: #creates a list with all trials
+            # change here to randomize the trials
+            self.trial = {
+            'trial': row[0],
+            'sample' : row[1],
+            'comp1' : row[2],
+            'comp2' : row[3],
+            }
+            self.all_trials.append(self.trial)
+        self.count_down_trials = len(self.all_trials) #number of trials based on number of rows in csv file
+        self.trial_number = 0
+        self.current_trial = self.all_trials[self.trial_number] #preparation for the loop
+        
+        self.open_window()
+            
     def open_window(self):
         # creates the window the child will interact
-        
+        self.correct = 0
+        self.incorrect = 0
         self.delay_option = self.var.get()
         
         self.user_window = tk.Toplevel(bg='white')
@@ -141,26 +191,32 @@ class Application(tk.Frame):
             print (self.current_trial) #important to know what trial is this
             #print (trial_number)
             self.trial_number = self.trial_number + 1
-            self.after(5000, self.set_stimuli)
+            # sets the timeout
+            self.after(5000, self.set_stimuli) #defines the timeout
             
-        else: root.destroy()
+        else:
+            with open(self.logfile, 'a') as file_object:
+                file_object.write('\n Correct= '+str(self.correct))
+                file_object.write('\n Incorrect= '+str(self.incorrect))
+            root.destroy()
         
     def set_stimuli(self):
+        
         self.bsample = tk.Button(self.frame_sample, relief='flat', bg='white')
-        self.photo1 = tk.PhotoImage(file=self.current_trial['sample']) #set the image of sample
+        self.photo1 = tk.PhotoImage(file=self.path+self.current_trial['sample']) #set the image of sample
         self.bsample["command"] = self.hide_sample
         self.bsample.config(image=self.photo1, width="300", height="162")
         self.bsample.grid(column=2, row=1)
         
         self.bcompa1 = tk.Button(self.frame_comparissons1, bg='white')
-        self.photo2 = tk.PhotoImage(file=self.current_trial['comp1']) #set the image of comp1
+        self.photo2 = tk.PhotoImage(file=self.path+self.current_trial['comp1']) #set the image of comp1
         self.bcompa1["command"] = self.mark_response_left
         self.bcompa1.config(image=self.photo2, width="300", height="162")
         
         
         self.bcompa2 = tk.Button(self.frame_comparissons3, bg='white')
         self.bcompa2["command"] = self.mark_response_right
-        self.photo3 = tk.PhotoImage(file=self.current_trial['comp2']) #set the image of comp1
+        self.photo3 = tk.PhotoImage(file=self.path+self.current_trial['comp2']) #set the image of comp1
         self.bcompa2.config(image=self.photo3, width="300", height="162")
         
     def mark_response_left(self):
@@ -168,11 +224,11 @@ class Application(tk.Frame):
         if self.current_trial['sample'] == self.current_trial['comp1']:
             with open(self.logfile, 'a') as file_object:
                 file_object.write('\nLEFT     correct')
-                #file_object.write('\n')
+                self.correct = self.correct + 1
         else:
             with open(self.logfile, 'a') as file_object:
                 file_object.write('\nLEFT     incorrect')
-                #file_object.write('\n')
+                self.incorrect = self.incorrect + 1
             
         self.trial_control()
     
@@ -181,11 +237,11 @@ class Application(tk.Frame):
         if self.current_trial['sample'] == self.current_trial['comp2']:
             with open(self.logfile, 'a') as file_object:
                 file_object.write('\nRIGHT     correct')
-                #file_object.write('\n')
+                self.correct = self.correct + 1
         else:
             with open(self.logfile, 'a') as file_object:
                 file_object.write('\nRIGHT     incorrect')
-                #file_object.write('\n')
+                self.incorrect = self.incorrect + 1
             
         self.trial_control()
     
