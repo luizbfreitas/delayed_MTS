@@ -79,7 +79,7 @@ class Application(tk.Frame):
         #need to set this code to select the right folder
         self.box_value = self.img_option.get()
         print(self.box_value)
-        self.path = "c:/users/luizt/dropbox/hd/python_work/delayed_mts/" + self.box_value + "/"
+        self.path = self.box_value + "/"
         
         #randomizes the trials in data.csv
         self.list1 = os.listdir(self.path)

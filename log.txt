@@ -793,3 +793,32 @@ RIGHT     correct
 LEFT     correct
  Correct= 19
  Incorrect= 1
+
+
+=======================================
+Thu Oct  4 16:29:42 2018
+
+Choosen position and result:
+LEFT     correct
+LEFT     incorrect
+LEFT     incorrect
+RIGHT     correct
+RIGHT     incorrect
+RIGHT     incorrect
+LEFT     incorrect
+
+
+=======================================
+Fri Oct  5 09:20:10 2018
+
+Choosen position and result:
+LEFT     incorrect
+RIGHT     correct
+
+
+=======================================
+Fri Oct  5 09:47:47 2018
+
+Choosen position and result:
+RIGHT     correct
+LEFT     correct
