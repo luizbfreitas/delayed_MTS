@@ -144,17 +144,17 @@ class Application(tk.Frame):
         self.frame_comparissons1 = tk.Frame(self.user_window, bg='white')
         self.frame_comparissons1["height"] = 180
         self.frame_comparissons1["width"] = 320
-        self.frame_comparissons1.grid(column=1, row=2, padx=100)
+        self.frame_comparissons1.grid(column=1, row=2, padx=100)#original padx=100 - 60 for chromebook
         
         self.frame_comparissons2 = tk.Frame(self.user_window, bg='white')
         self.frame_comparissons2["height"] = 180
         self.frame_comparissons2["width"] = 320
-        self.frame_comparissons2.grid(column=2, row=2, padx=100)
+        self.frame_comparissons2.grid(column=2, row=2, padx=100)#original padx=100 - 60 for chromebook
         
         self.frame_comparissons3 = tk.Frame(self.user_window, bg='white')
         self.frame_comparissons3["height"] = 180
         self.frame_comparissons3["width"] = 320
-        self.frame_comparissons3.grid(column=3, row=2, padx=100)
+        self.frame_comparissons3.grid(column=3, row=2, padx=100)#original padx=100 - 60 for chromebook
         
         self.trial_control()
         self.log_header()
